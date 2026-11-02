@@ -23,6 +23,7 @@ The functions are also imported by the Streamlit app (app.py).
 from pathlib import Path
 from datetime import datetime
 import argparse
+import os
 import io
 import json
 import urllib.request
@@ -55,6 +56,8 @@ from sklearn.tree import DecisionTreeRegressor
 plt.rcParams.update({'font.size': 11})
 
 RANDOM_STATE = 42
+# Parallel jobs: all CPU cores locally (-1); app.py sets WA1_N_JOBS=1 on Streamlit Cloud (1 GB memory limit)
+N_JOBS = int(os.environ.get('WA1_N_JOBS', '-1'))
 ROOT = Path(__file__).resolve().parent
 DOWNLOAD_URL = 'https://archive.ics.uci.edu/static/public/275/bike+sharing+dataset.zip'
 DATA_DIR = ROOT / 'datasets' / 'bike_sharing'                     # where the download is extracted
@@ -511,7 +514,7 @@ def step5_select_train(data, random_state=RANDOM_STATE):
         'Linear Regression': build_reg_pipeline(LinearRegression()),
         'Decision Tree': build_reg_pipeline(DecisionTreeRegressor(random_state=random_state)),
         'Random Forest': build_reg_pipeline(RandomForestRegressor(n_estimators=200, random_state=random_state,
-                                                                  n_jobs=-1)),
+                                                                  n_jobs=N_JOBS)),
     }
     rows, cv_r2 = [], {}
     for name, estimator in candidates.items():
@@ -541,11 +544,11 @@ def step6_fine_tune(data, random_state=RANDOM_STATE):
         {'engineer__add_extras': [False, True], 'model': [LinearRegression()]},
         {'engineer__add_extras': [False, True], 'model': [Ridge()], 'model__alpha': [0.1, 1, 10, 100]},
         {'engineer__add_extras': [False, True],
-         'model': [RandomForestRegressor(random_state=random_state, n_jobs=-1)],
+         'model': [RandomForestRegressor(random_state=random_state, n_jobs=N_JOBS)],
          'model__n_estimators': [100, 300], 'model__max_features': [0.33, 0.66, 1.0]},
     ]
     search = GridSearchCV(build_reg_pipeline(), param_grid, cv=cv_splitter(random_state),
-                          scoring='neg_root_mean_squared_error', return_train_score=True, n_jobs=-1)
+                          scoring='neg_root_mean_squared_error', return_train_score=True, n_jobs=N_JOBS)
     search.fit(data['X_train'], data['y_train'])
 
     res = pd.DataFrame(search.cv_results_)

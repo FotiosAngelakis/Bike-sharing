@@ -13,6 +13,10 @@ import pandas as pd
 import streamlit as st
 from sklearn.metrics import confusion_matrix
 
+import gc
+import os
+os.environ.setdefault('WA1_N_JOBS', '1')   # one process at a time: Streamlit Cloud has ~1 GB memory
+
 import problem1 as P1
 import problem2 as P2
 
@@ -35,12 +39,18 @@ def model_download(model, metadata, filename):
 
 @st.cache_resource(show_spinner='Running Problem 1 (incl. grid search, ~1 min the first time)...')
 def get_p1():
-    return P1.run_all(save_model_file=False)
+    r = P1.run_all(save_model_file=False)
+    r['s6'].pop('search', None)            # the GridSearchCV object (all fitted candidates) is no longer needed
+    gc.collect()
+    return r
 
 
 @st.cache_resource(show_spinner='Running Problem 2...')
 def get_p2():
-    return P2.run_all(save_model_file=False)
+    r = P2.run_all(save_model_file=False)
+    r['s6'].pop('search', None)
+    gc.collect()
+    return r
 
 
 page = st.sidebar.radio('Problem', ['Problem 1 - Bike Sharing (regression)',

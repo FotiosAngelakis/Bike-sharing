@@ -25,6 +25,7 @@ The functions are also imported by the Streamlit app (app.py).
 from pathlib import Path
 from datetime import datetime
 import argparse
+import os
 import json
 
 import joblib
@@ -51,6 +52,8 @@ from sklearn.preprocessing import StandardScaler
 plt.rcParams.update({'font.size': 11})
 
 RANDOM_STATE = 42
+# Parallel jobs: all CPU cores locally (-1); app.py sets WA1_N_JOBS=1 on Streamlit Cloud (1 GB memory limit)
+N_JOBS = int(os.environ.get('WA1_N_JOBS', '-1'))
 ROOT = Path(__file__).resolve().parent
 MODEL_PATH = ROOT / 'models' / 'problem2_model.joblib'
 TARGET_RECALL = 0.95
@@ -170,7 +173,7 @@ def step5_select_train(data, random_state=RANDOM_STATE):
         'Baseline (always benign)': DummyClassifier(strategy='most_frequent'),
         'SGD linear classifier': SGDClassifier(random_state=random_state),
         'Logistic Regression': LogisticRegression(max_iter=5000),
-        'Random Forest': RandomForestClassifier(n_estimators=300, random_state=random_state, n_jobs=-1),
+        'Random Forest': RandomForestClassifier(n_estimators=300, random_state=random_state, n_jobs=N_JOBS),
     }
     rows = []
     for name, model in candidates.items():
@@ -216,7 +219,7 @@ def step6_fine_tune(data, s5, random_state=RANDOM_STATE, target_recall=TARGET_RE
                   'sgd__alpha': [1e-4, 1e-3, 1e-2, 1e-1],
                   'sgd__penalty': ['l2', 'l1', 'elasticnet']}
     search = GridSearchCV(build_sgd_pipeline(random_state), param_grid, cv=StratifiedKFold(3),
-                          scoring='roc_auc', n_jobs=-1)
+                          scoring='roc_auc', n_jobs=N_JOBS)
     search.fit(X_train, y_train)
     res = pd.DataFrame(search.cv_results_)
     table = pd.DataFrame({'loss': res['param_sgd__loss'], 'alpha': res['param_sgd__alpha'],
