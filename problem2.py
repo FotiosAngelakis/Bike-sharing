@@ -1,26 +1,7 @@
 """
 DAMA61 - Written Assignment 1 - Problem 2: Breast Cancer Wisconsin (binary classification)
 
-Organised as an end-to-end Machine Learning project following the checklist of
-A. Geron, "Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow", Ch. 2:
 
-    Step 1  Look at the big picture                  (assignment Q1 discussion)
-    Step 2  Get the data                             (Q1, Q2 split)
-    Step 3  Discover and visualise the data          (Q1 balance, Q2 feature scales)
-    Step 4  Prepare the data for ML algorithms       (Q2 standardisation)
-    Step 5  Select a model and train it              (Q2 SGD, Q3, Q4)
-    Step 6  Fine-tune the model                      (Q5 threshold, Q6 ROC + hyper-parameter search)
-    Step 7  Present the solution                     (Q6 test-set evaluation)
-    Step 8  Launch, monitor and maintain the system  (beyond the assignment)
-
-Malignant = positive class (1), benign = negative class (0).
-
-Run from the WA1 folder:
-    python problem2.py            # prints every step, shows + saves figures (./figures), model (./models)
-    python problem2.py --no-show  # only save the figures
-In Spyder just press F5: figures appear in the Plots pane as each step finishes.
-
-The functions are also imported by the Streamlit app (app.py).
 """
 from pathlib import Path
 from datetime import datetime
