@@ -1,8 +1,6 @@
 """
 DAMA61 - Written Assignment 1 - Problem 1: Bike Sharing demand (regression)
 
-End-to-end Machine Learning project following A. Geron, "Hands-On Machine Learning
-with Scikit-Learn, Keras & TensorFlow", Chapter 2:
 
     Step 1  Look at the big picture                  (assignment Q1)
     Step 2  Get the data: fetch, inspect, missing values, histograms, test set   (Q1, Q2, Q5)
@@ -13,12 +11,6 @@ with Scikit-Learn, Keras & TensorFlow", Chapter 2:
     Step 7  Present the solution                     (Q7, Q8)
     Step 8  Launch, monitor and maintain the system  (beyond the assignment)
 
-Run from the WA1 folder (inside the virtual environment, see README.md):
-    python problem1.py            # prints every step, shows + saves figures (./figures), model (./models)
-    python problem1.py --no-show  # only save the figures
-In Spyder just press F5: figures appear in the Plots pane as each step finishes.
-
-The functions are also imported by the Streamlit app (app.py).
 """
 from pathlib import Path
 from datetime import datetime
