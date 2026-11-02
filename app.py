@@ -1,6 +1,5 @@
 """
-Streamlit app for DAMA61 - Written Assignment 1, organised as an end-to-end ML project
-(Geron, Hands-On Machine Learning, Ch. 2). 
+
 """
 import io
 
